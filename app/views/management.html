@@ -1,0 +1,33 @@
+<div class="col-lg-4 col-lg-offset-4">
+    <select class="form-control"
+            ng-model="selectedPersonalTrainer"
+            ng-options="pt as (pt.firstName + ' ' + pt.lastName) for pt in personalTrainers"
+            >
+    </select>
+</div>
+<!--<table class="table table-bordered voffset5">-->
+<!--<thead>-->
+<!--<tr>-->
+<!--<th ng-repeat="header in headers">{{header}}</th>-->
+<!--<th></th>-->
+<!--<th></th>-->
+<!--</tr>-->
+<!--</thead>-->
+<!--<tbody>-->
+<!--<tr ng-repeat="client in selectedPersonalTrainer.clients">-->
+<!--<td>{{client.firstName}}</td>-->
+<!--<td>{{client.lastName}}</td>-->
+<!--<td class="glyphicon glyphicon-edit"></td>-->
+<!--<td class="glyphicon glyphicon-remove"></td>-->
+<!--</tr>-->
+<!--</tbody>-->
+<!--</table>-->
+<br/>
+<br/>
+<br/>
+<table ng-table class="table table-bordered">
+    <tr ng-repeat="client in selectedPersonalTrainer.clients">
+        <td data-title="'First Name'">{{client.firstName}}</td>
+        <td data-title="'Last Name'">{{client.lastName}}</td>
+    </tr>
+</table>
