@@ -2,32 +2,117 @@
     <select class="form-control"
             ng-model="selectedPersonalTrainer"
             ng-options="pt as (pt.firstName + ' ' + pt.lastName) for pt in personalTrainers"
+            ng-change="changeSelection()"
             >
+        <option ng-if="!selectedPersonalTrainer" value="">--select personal trainer--</option>
     </select>
 </div>
-<!--<table class="table table-bordered voffset5">-->
-<!--<thead>-->
-<!--<tr>-->
-<!--<th ng-repeat="header in headers">{{header}}</th>-->
-<!--<th></th>-->
-<!--<th></th>-->
+<br/>
+<br/>
+<br/>
+<div ng-if="selectedPersonalTrainer">
+    <table ng-table class="table table-bordered">
+        <tr ng-repeat="client in clients">
+            <td data-title="'First Name'">
+                <span ng-if="!client.$edit">{{client.firstName}}</span>
+
+                <div ng-if="client.$edit"><input class="form-control" type="text" ng-model="client.firstName"/></div>
+            </td>
+            <td data-title="'Last Name'" width="200">
+                <span ng-if="!client.$edit">{{client.lastName}}</span>
+
+                <div ng-if="client.$edit"><input class="form-control" type="text" ng-model="client.lastName"/></div>
+            </td>
+            <td data-title="'Actions'" width="120">
+                <a ng-if="!client.$edit" href="" class="btn btn-default btn-xs"
+                   ng-click="client.$edit = true;">Edit</a>
+                <a ng-if="!client.$edit" href="" class="btn btn-default btn-xs"
+                   ng-click="remove(client)">Remove</a>
+                <a ng-if="client.$edit" href="" class="btn btn-primary btn-xs"
+                   ng-click="client.$edit = false;save(client)">Save</a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<!--<table ng-table="tableParams" class="table table-bordered">-->
+<!--<tbody ng-repeat="p in $data">-->
+<!--<tr id="tr{{p.id}}" ng-class-odd="'odd'" ng-class-even="'even'">-->
+<!--<td class="rowTd" data-title="'ID'"          sortable="'id'">{{p.id}}</td>-->
+<!--<td class="rowTd" data-title="'Firstname'"   sortable="'fn'">{{p.fn}}</td>-->
+<!--<td class="rowTd" data-title="'Lastname'"    sortable="'ln'">{{p.ln}}</td>-->
+<!--<td class="rowTd" data-title="'Description'" sortable="'dc'">{{p.dc}}</td>-->
+<!--<td class="rowTd" data-title="'Email'"       sortable="'em'">{{p.em}}</td>-->
+<!--<td class="rowTd" data-title="'Phone'"       sortable="'ph'">{{p.ph}}</td>-->
+<!--<td class="rowTd" ><input type=button id="editRowBtn{{p.id}}" value="edit"-->
+<!--ng-click="setEditId(p.id)"></td>-->
 <!--</tr>-->
-<!--</thead>-->
-<!--<tbody>-->
-<!--<tr ng-repeat="client in selectedPersonalTrainer.clients">-->
-<!--<td>{{client.firstName}}</td>-->
-<!--<td>{{client.lastName}}</td>-->
-<!--<td class="glyphicon glyphicon-edit"></td>-->
-<!--<td class="glyphicon glyphicon-remove"></td>-->
+<!--<tr ng-show="editId===p.id" ng-if="editId===p.id">-->
+<!--<td colspan="7">-->
+<!--<table class="noborder">-->
+<!--<tr>-->
+<!--<td rowspan="2">ID: {{p.id}}<input type="hidden" name="id" value="{{p.id}}"></td>-->
+<!--<td>Firstname:</td>-->
+<!--<td><input type="text" name="fn" class="w100" value="{{p.fn}}"></td>-->
+<!--<td>Description: </td>-->
+<!--<td>Email:</td>-->
+<!--<td><input type="text" name="em" class="w180" value="{{p.em}}"></td>-->
+<!--<td><input type="button" value=" save " onclick="alert('Save :)')"></td>-->
+<!--</tr>-->
+<!--<tr>-->
+<!--<td>Lastname:</td>-->
+<!--<td><input type="text" name="ln" class="w100" value="{{p.ln}}"></td>-->
+<!--<td><input type="text" name="dc" class="w180" value="{{p.dc}}"></td>-->
+<!--<td>Phone: </td>-->
+<!--<td><input type="text" name="ph" class="w120" value="{{p.ph}}"></td>-->
+<!--<td><input type="button" value=" cancel" ng-click="setEditId(-1)"></td>-->
+<!--</tr>-->
+<!--</table>-->
+<!--</td>-->
 <!--</tr>-->
 <!--</tbody>-->
 <!--</table>-->
-<br/>
-<br/>
-<br/>
-<table ng-table class="table table-bordered">
-    <tr ng-repeat="client in selectedPersonalTrainer.clients">
-        <td data-title="'First Name'">{{client.firstName}}</td>
-        <td data-title="'Last Name'">{{client.lastName}}</td>
-    </tr>
-</table>
+
+<!--<table ng-table="tableParams" class="table">-->
+<!--<tr ng-repeat="user in $data">-->
+<!--<td data-title="'First Name'">-->
+<!--<span ng-if="!user.$edit">{{user.name}}</span>-->
+<!--<div ng-if="user.$edit"><input class="form-control" type="text" ng-model="user.name" /></div>-->
+<!--</td>-->
+<!--<td data-title="'Last Name'" width="200">-->
+<!--<span ng-if="!user.$edit">{{user.age}}</span>-->
+<!--<div ng-if="user.$edit"><input class="form-control" type="number" ng-model="user.age" /></div>-->
+<!--</td>-->
+<!--<td data-title="'Actions'" width="120">-->
+<!--<a ng-if="!user.$edit" href="" class="btn btn-default btn-xs" ng-click="user.$edit = true">Edit</a>-->
+<!--<a ng-if="!user.$edit" href="" class="btn btn-default btn-xs" ng-click="user.$edit = true">Remove</a>-->
+<!--<a ng-if="user.$edit" href="" class="btn btn-primary btn-xs" ng-click="user.$edit = false">Save</a>-->
+<!--</td>-->
+<!--</tr>-->
+<!--</table>-->
+
+<!--<table ng-table="tableParams" class="table">-->
+    <!--<tr ng-repeat="client in $data">-->
+        <!--<td data-title="'First Name'">-->
+            <!--<span ng-if="!client.$edit">{{client.firstName}}</span>-->
+
+            <!--<div ng-if="client.$edit"><input class="form-control" type="text" ng-model="client.firstName"/></div>-->
+        <!--</td>-->
+        <!--<td data-title="'Last Name'" width="200">-->
+            <!--<span ng-if="!client.$edit">{{client.lastName}}</span>-->
+
+            <!--<div ng-if="client.$edit"><input class="form-control" type="text" ng-model="client.lastName"/></div>-->
+        <!--</td>-->
+        <!--<td data-title="'Actions'" width="120">-->
+            <!--<a ng-if="!client.$edit" href="" class="btn btn-default btn-xs" ng-click="client.$edit = true">Edit</a>-->
+            <!--<a ng-if="!client.$edit" href="" class="btn btn-default btn-xs" ng-click="client.$edit = true">Remove</a>-->
+            <!--<a ng-if="client.$edit" href="" class="btn btn-primary btn-xs" ng-click="client.$edit = false">Save</a>-->
+        <!--</td>-->
+    <!--</tr>-->
+<!--</table>-->
