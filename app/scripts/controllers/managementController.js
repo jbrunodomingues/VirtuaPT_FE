@@ -13,28 +13,50 @@ angular.module('VirtualPTApp')
         function ($scope, PersonalTrainerService, ClientService, PtClientAssociationService, ngTableParams) {
             $scope.personalTrainers = PersonalTrainerService.query();
             $scope.selectedPersonalTrainer = null;
+            $scope.clients = null;
+            $scope.newClient = null;
 
             $scope.changeSelection = function () {
-                var ptClientAssociations = PtClientAssociationService.query({personalTrainerId: $scope.selectedPersonalTrainer.id})
-                var clients = [];
-                for(var i = 0; i < ptClientAssociations.length; i++) {
-                    clients.push(ptClientAssociations[i].client);
-                }
-                $scope.clients = clients;
-//                $scope.clients = $scope.selectedPersonalTrainer.clients;
+                $scope.clients = PtClientAssociationService.query(
+                    {personalTrainerId: $scope.selectedPersonalTrainer.id},
+                    function (ptClientAssociations) {
+                        $scope.clients = ptClientAssociations.map(function (ptClientAssociation) {
+                            return ptClientAssociation.client;
+                        });
+                    }
+                );
             };
 
             $scope.save = function (client) {
-                var newClient = {
-                    firstName: 'Testing',
-                    lastName: 'Stuff'
-                };
-                ClientService.save(newClient)
-//                ClientService.update(client);
+                ClientService.update(client);
             };
 
             $scope.remove = function (client) {
-                ClientService.delete({id: client.id});
+                console.log(client);
+                PtClientAssociationService.query(
+                    {clientId: client.id},
+                    function(ptClientAssociations) {
+                        PtClientAssociationService.remove(
+                            {id: ptClientAssociations[0].id},
+                            function () {
+                                ClientService.delete(
+                                    {id: client.id},
+                                    function () {
+                                        var indexOf = $scope.clients.indexOf(client);
+                                        $scope.clients.splice(indexOf, 1);
+                                    }
+                                );
+                            });
+                    }
+                );
+            };
+
+            $scope.create = function(client) {
+                console.log(client);
+            };
+
+            $scope.createNew = function() {
+                $scope.newClient = new ClientService();
             };
         }
     ]);

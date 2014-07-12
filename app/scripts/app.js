@@ -1,12 +1,5 @@
-/**
- * @ngdoc overview
- * @name VirtualPTApp
- * @description
- * # VirtualPTApp
- *
- * Main module of the application.
- */
 'use strict';
+
 angular
     .module('VirtualPTApp', [
         'ngCookies',
@@ -27,6 +20,13 @@ angular
             })
             .when('/management', {
                 templateUrl: 'views/management.html',
+                controller: 'ManagementController'
+            })
+            .when('/contact', {
+                templateUrl: 'views/contact.html',
+            })
+            .when('/editModal', {
+                templateUrl: 'views/editModal.html',
                 controller: 'ManagementController'
             })
             .otherwise({
