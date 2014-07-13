@@ -403,7 +403,7 @@ module.exports = function (grunt) {
             host: 'localhost',
             login: 'tomcat',
             password: 'tomcat',
-            path: '/fe',
+            path: '/dev',
             port: 8080,
             dist: 'app',
             deploy: '/manager/text/deploy',
