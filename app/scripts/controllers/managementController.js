@@ -6,15 +6,15 @@
 angular.module('VirtualPTApp')
     .controller('ManagementController', [
         '$scope',
+        '$modal',
         'PersonalTrainerService',
         'ClientService',
         'PtClientAssociationService',
         'ngTableParams',
-        function ($scope, PersonalTrainerService, ClientService, PtClientAssociationService, ngTableParams) {
+        function ($scope, $modal, PersonalTrainerService, ClientService, PtClientAssociationService, ngTableParams) {
             $scope.personalTrainers = PersonalTrainerService.query();
             $scope.selectedPersonalTrainer = null;
             $scope.clients = null;
-            $scope.newClient = null;
 
             $scope.changeSelection = function () {
                 $scope.clients = PtClientAssociationService.query(
@@ -32,10 +32,9 @@ angular.module('VirtualPTApp')
             };
 
             $scope.remove = function (client) {
-                console.log(client);
                 PtClientAssociationService.query(
                     {clientId: client.id},
-                    function(ptClientAssociations) {
+                    function (ptClientAssociations) {
                         PtClientAssociationService.remove(
                             {id: ptClientAssociations[0].id},
                             function () {
@@ -51,12 +50,46 @@ angular.module('VirtualPTApp')
                 );
             };
 
-            $scope.create = function(client) {
-                console.log(client);
+            $scope.create = function (client) {
+                ClientService.save(client, function (createdClient) {
+                    var ptClientAssociation = {};
+                    ptClientAssociation.client = createdClient;
+                    ptClientAssociation.personalTrainer = $scope.selectedPersonalTrainer;
+                    PtClientAssociationService.save(ptClientAssociation, function () {
+                        $scope.clients = PtClientAssociationService.query(
+                            {personalTrainerId: $scope.selectedPersonalTrainer.id},
+                            function (ptClientAssociations) {
+                                $scope.clients = ptClientAssociations.map(function (ptClientAssociation) {
+                                    return ptClientAssociation.client;
+                                });
+                            }
+                        );
+                    });
+                });
             };
 
-            $scope.createNew = function() {
-                $scope.newClient = new ClientService();
+            $scope.createNew = function () {
+                var modalInstance = $modal.open({
+                    templateUrl: 'myModalContent.html',
+                    controller: ModalInstanceCtrl,
+                    size: 'sm'
+                });
+                modalInstance.result.then(function (client) {
+                    $scope.create(client);
+                });
             };
+
         }
     ]);
+
+var ModalInstanceCtrl = function ($scope, $modalInstance) {
+    $scope.client = {};
+
+    $scope.create = function () {
+        $modalInstance.close($scope.client);
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
