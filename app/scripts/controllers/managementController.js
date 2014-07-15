@@ -12,7 +12,9 @@ angular.module('VirtualPTApp')
         'PtClientAssociationService',
         'ngTableParams',
         function ($scope, $modal, PersonalTrainerService, ClientService, PtClientAssociationService, ngTableParams) {
-            $scope.personalTrainers = PersonalTrainerService.query();
+            PersonalTrainerService.query().$promise.then(function (result) {
+                $scope.personalTrainers = result;
+            });
             $scope.selectedPersonalTrainer = null;
             $scope.clients = null;
 
