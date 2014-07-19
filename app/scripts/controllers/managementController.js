@@ -3,6 +3,18 @@
  */
 'use strict';
 
+var ModalInstanceCtrl = function ($scope, $modalInstance) {
+    $scope.client = {};
+
+    $scope.create = function () {
+        $modalInstance.close($scope.client);
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+};
+
 angular.module('VirtualPTApp')
     .controller('ManagementController', [
         '$scope',
@@ -83,15 +95,3 @@ angular.module('VirtualPTApp')
 
         }
     ]);
-
-var ModalInstanceCtrl = function ($scope, $modalInstance) {
-    $scope.client = {};
-
-    $scope.create = function () {
-        $modalInstance.close($scope.client);
-    };
-
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-};
