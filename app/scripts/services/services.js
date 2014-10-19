@@ -4,9 +4,11 @@
 
 'use strict';
 
+var domain = 'http://localhost:8080';
+
 angular.module('VirtualPTApp')
     .factory('PersonalTrainerService', function ($resource) {
-        return $resource('../rest/personalTrainers/:id', {
+        return $resource(domain +'/rest/personalTrainers/:id', {
             id: '@id'
         });
     });
@@ -14,7 +16,7 @@ angular.module('VirtualPTApp')
 angular.module('VirtualPTApp')
     .factory('ClientService', function ($resource) {
         return $resource(
-            '../rest/clients/:id',
+                domain +'/rest/clients/:id',
             {
                 id: '@id'
             },
@@ -28,7 +30,7 @@ angular.module('VirtualPTApp')
 
 angular.module('VirtualPTApp')
     .factory('PtClientAssociationService', function ($resource) {
-        return $resource('../rest/ptClientAssociations/:id', {
+        return $resource(domain +'/rest/ptClientAssociations/:id', {
             id: '@id'
         });
     });
