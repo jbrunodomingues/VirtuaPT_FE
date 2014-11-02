@@ -1,5 +1,8 @@
 'use strict';
 
+//todo fix this to a global
+var restEndPoint = 'http://localhost:8080/rest';
+
 angular
     .module('VirtualPTApp', [
         'ngCookies',
@@ -23,7 +26,7 @@ angular
                 controller: 'ManagementController'
             })
             .when('/contact', {
-                templateUrl: 'views/contact.html',
+                templateUrl: 'views/contact.html'
             })
             .when('/editModal', {
                 templateUrl: 'views/editModal.html',

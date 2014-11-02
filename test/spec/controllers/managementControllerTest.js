@@ -3,12 +3,14 @@
  */
 'use strict';
 
-describe('controllers', function () {
+describe('ManagementControllerTest', function () {
 
     var mockBackend;
     var $scope;
     var $controller;
     var personalTrainers;
+
+    var testRestEndPoint = restEndPoint;
 
     beforeEach(function () {
         module('VirtualPTApp');
@@ -18,34 +20,31 @@ describe('controllers', function () {
             $scope = _$rootScope_.$new();
         });
         personalTrainers = createPersonalTrainers();
-        mockBackend.whenGET('../rest/personalTrainers', {'Accept': 'application/json, text/plain, */*'}).
+        mockBackend.whenGET(testRestEndPoint + '/personalTrainers', {'Accept': 'application/json, text/plain, */*'}).
             respond(personalTrainers);
     });
 
     it('should populate with personal trainers',
         inject(function (PersonalTrainerService) {
-                //given before configuration
-
-                //when
-                $controller('ManagementController',
-                    {
-                        $scope: $scope,
-                        PersonalTrainerService: PersonalTrainerService
-                    }
-                );
-                mockBackend.flush();
-
-                //then
-                expect($scope.personalTrainers.length).toEqual(2);
-            }
-        )
+            //given setup configuration
+            //when
+            $controller('ManagementController',
+                {
+                    $scope: $scope,
+                    PersonalTrainerService: PersonalTrainerService
+                }
+            );
+            mockBackend.flush();
+            //then
+            expect($scope.personalTrainers.length).toEqual(2);
+        })
     );
 
     it('should get personalTrainer clients',
         inject(function (PersonalTrainerService, PtClientAssociationService) {
             //given
             var ptClientAssociations = createPtClientAssociations();
-            mockBackend.whenGET('../rest/ptClientAssociations?personalTrainerId=1', {'Accept': 'application/json, text/plain, */*'})
+            mockBackend.whenGET(testRestEndPoint + '/ptClientAssociations?personalTrainerId=1', {'Accept': 'application/json, text/plain, */*'})
                 .respond(ptClientAssociations);
 
             $controller('ManagementController',
@@ -72,7 +71,7 @@ describe('controllers', function () {
             //given
             var client = createClient();
 
-            mockBackend.expectPUT('../rest/clients/1', client)
+            mockBackend.expectPUT(testRestEndPoint + '/clients/1', client)
                 .respond(client);
 
             $controller('ManagementController',
@@ -96,15 +95,15 @@ describe('controllers', function () {
             //given
             var newClient = createNewClient();
             var client = createClient();
-            mockBackend.expectPOST('../rest/clients', newClient)
+            mockBackend.expectPOST(testRestEndPoint + '/clients', newClient)
                 .respond(client);
 
             var ptClientAssociation = createNewPtClientAssociation();
-            mockBackend.whenPOST('../rest/ptClientAssociations', ptClientAssociation)
+            mockBackend.whenPOST(testRestEndPoint + '/ptClientAssociations', ptClientAssociation)
                 .respond(ptClientAssociation);
 
             var ptClientAssociations = createPtClientAssociations();
-            mockBackend.expectGET('../rest/ptClientAssociations?personalTrainerId=1')
+            mockBackend.expectGET(testRestEndPoint + '/ptClientAssociations?personalTrainerId=1')
                 .respond(ptClientAssociations);
 
             $controller('ManagementController',
@@ -129,11 +128,11 @@ describe('controllers', function () {
         inject(function (PersonalTrainerService, ClientService, PtClientAssociationService) {
             var client = createClient();
             var ptClientAssociations = [createPtClientAssociations()[0]];
-            mockBackend.whenGET('../rest/ptClientAssociations?clientId=1')
+            mockBackend.whenGET(testRestEndPoint + '/ptClientAssociations?clientId=1')
                 .respond(ptClientAssociations);
-            mockBackend.expectDELETE('../rest/ptClientAssociations/1')
+            mockBackend.expectDELETE(testRestEndPoint + '/ptClientAssociations/1')
                 .respond({});
-            mockBackend.expectDELETE('../rest/clients/1')
+            mockBackend.expectDELETE(testRestEndPoint + '/clients/1')
                 .respond({});
 
             $controller('ManagementController',
@@ -173,7 +172,7 @@ describe('controllers', function () {
         ];
     };
 
-    var createNewPtClientAssociation = function() {
+    var createNewPtClientAssociation = function () {
         return {
             personalTrainer: {
                 id: 1,
@@ -191,7 +190,7 @@ describe('controllers', function () {
     var createPtClientAssociations = function () {
         return [
             {
-                id:1,
+                id: 1,
                 personalTrainer: {
                     id: 1,
                     firstName: 'John',
